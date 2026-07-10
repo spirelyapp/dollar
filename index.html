@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ONE DOLLAR</title>
+<meta name="description" content="an experiment: can a million strangers each give one dollar?">
+<style>
+  :root{
+    /* ▼ Replace with the hex from gooddaywillarrive.com.
+         Everything else on the page derives from it. */
+    --pink:#FF6FA5;
+
+    --paper:#FFFFFF;
+    --ink:var(--pink);
+    --muted:var(--pink);   /* all text is one color, no lighter tier */
+    --hair:color-mix(in srgb, var(--pink) 22%, var(--paper));
+    --sans:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+
+  ::selection{background:var(--ink);color:var(--paper)}
+
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:var(--sans);
+    font-size:15px; line-height:1.55;
+    font-weight:700;
+    -webkit-font-smoothing:antialiased;
+    padding:0 24px 96px;
+  }
+
+  .col{max-width:760px;margin:0 auto}
+
+  a{color:inherit;text-underline-offset:3px}
+  a:focus-visible,.give:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+
+  /* ── nav ───────────────────────────────────────────────────── */
+  nav{
+    display:flex; justify-content:space-between; align-items:center;
+    font-family:var(--sans); font-size:12px; letter-spacing:.06em;
+    padding:28px 0 22vh;
+  }
+  nav a{text-decoration:none;display:inline-flex;align-items:center}
+  nav a:not(:has(.heart)):hover{text-decoration:underline}
+
+  .heart{
+    width:15px; height:auto; display:block;
+    fill:var(--pink);
+    transition:transform .14s ease;
+  }
+  nav a:hover .heart{transform:scale(1.14)}
+
+  /* ── type ──────────────────────────────────────────────────── */
+  h1{
+    font-size:clamp(1.75rem,4.4vw,2.6rem);
+    line-height:1.06; font-weight:700;
+    letter-spacing:-.02em; text-transform:uppercase;
+    margin-bottom:2.2rem;
+  }
+
+  p{max-width:56ch;margin-bottom:1.35rem}
+  p:last-child{margin-bottom:0}
+  .muted{color:var(--muted)}
+
+  h2,.eyebrow{
+    font-family:var(--sans); font-size:12px; font-weight:700;
+    letter-spacing:.1em; text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:1rem;
+  }
+
+  ul,ol{list-style:none;max-width:56ch}
+  ul li{padding-left:1.1rem;position:relative}
+  ul li::before{content:"–";position:absolute;left:0;color:var(--muted)}
+
+  ol{counter-reset:x;margin-bottom:1.35rem}
+  ol li{counter-increment:x;padding-left:1.7rem;position:relative}
+  ol li::before{content:counter(x) ".";position:absolute;left:0;color:var(--muted)}
+
+  /* ── the ask ───────────────────────────────────────────────── */
+  .give{
+    display:block; width:100%; text-align:center;
+    margin:3.2rem 0 .9rem;
+    padding:20px; text-decoration:none;
+    border:1px solid var(--ink);
+    font-family:var(--sans); font-size:13px;
+    letter-spacing:.14em; text-transform:uppercase;
+    transition:background .12s linear, color .12s linear;
+  }
+  .give:hover{background:var(--ink);color:var(--paper)}
+
+  .fine{
+    font-family:var(--sans); font-size:12px;
+    letter-spacing:.06em; color:var(--muted);
+    text-align:center;
+  }
+
+  .block{margin-top:14vh}
+
+  /* ── running counter ───────────────────────────────────────── */
+  .counter{margin-top:2.4rem}
+  .rail{
+    height:1px; background:var(--hair); position:relative;
+    max-width:340px; margin:0 auto .9rem;
+  }
+  .fill{
+    position:absolute; inset:0 auto 0 0; width:0;
+    background:var(--ink);
+    transition:width 1.2s cubic-bezier(.22,.8,.28,1);
+  }
+  .tally{
+    font-family:var(--sans); font-size:12px;
+    letter-spacing:.06em; color:var(--muted);
+    font-variant-numeric:tabular-nums;
+    text-align:center;
+  }
+  .tally b{color:var(--ink);font-weight:700}
+
+  hr{border:0;border-top:1px solid var(--hair);margin:16vh 0 3rem}
+
+  /* ── the wall ──────────────────────────────────────────────── */
+  figure{margin-top:9vh}
+  img{width:100%;height:auto;display:block}
+
+  /* placeholder — delete once real photos are in */
+  .ph{width:100%;aspect-ratio:4/5;background:color-mix(in srgb, var(--pink) 12%, var(--paper))}
+
+  @media (min-width:760px){
+    figure{margin-top:12vh}
+  }
+
+  /* ── footer bar ────────────────────────────────────────────── */
+  footer{
+    position:fixed; inset:auto 0 0 0;
+    display:flex; justify-content:space-between;
+    padding:14px 24px;
+    background:var(--paper); border-top:1px solid var(--hair);
+    font-family:var(--sans); font-size:12px; letter-spacing:.06em;
+    font-variant-numeric:tabular-nums;
+  }
+  footer .count{color:var(--muted)}
+  footer .count b{color:var(--ink);font-weight:700}
+</style>
+</head>
+<body>
+
+<div class="col">
+
+  <nav>
+    <a href="/" aria-label="Home">
+      <svg class="heart" viewBox="0 0 24 22" aria-hidden="true">
+        <path d="M12 21.5 2.9 12.4a5.9 5.9 0 0 1 0-8.4 5.9 5.9 0 0 1 8.4 0l.7.7.7-.7a5.9 5.9 0 0 1 8.4 0 5.9 5.9 0 0 1 0 8.4L12 21.5Z"/>
+      </svg>
+    </a>
+    <a href="mailto:dollarexperiment@hotmail.com">DOLLAREXPERIMENT@HOTMAIL.COM</a>
+  </nav>
+
+  <div class="eyebrow">An experiment, run in public:</div>
+
+  <h1>1 million dollars,<br>one dollar at a time.</h1>
+
+  <p>We are conducting an experiment to see if we can make $1,000,000 by asking one million people for $1.</p>
+
+  <p>If you would like to help out with this experiment, go ahead and give us a dollar. What you get in return is two things.</p>
+
+  <ol>
+    <li>You get access to our merch store.</li>
+    <li>We will put your picture on this page, below.</li>
+  </ol>
+
+  <!-- ▼ your Stripe payment link ▼ -->
+  <a class="give" href="https://buy.stripe.com/28E14gcJv0r9g8X8NBaAw04">Give one dollar</a>
+  <div class="fine">$1 · Secure checkout · Less than ten seconds</div>
+
+  <div class="counter">
+    <div class="rail"><div class="fill" id="fill"></div></div>
+    <div class="tally"><b>0</b> of 1,000,000 <span id="tail">— Be the first</span></div>
+  </div>
+
+  <div class="block">
+    <h2>How to take part:</h2>
+    <ul>
+      <li>Give one dollar</li>
+      <li>Hold up a dollar bill and take a picture of yourself</li>
+      <li>Send it to <a href="mailto:dollarexperiment@hotmail.com">dollarexperiment@hotmail.com</a></li>
+      <li>We post every picture, in the order it arrives.</li>
+    </ul>
+  </div>
+
+  <hr>
+
+  <div id="pictures"></div>
+
+</div>
+
+<footer>
+  <span>ONE DOLLAR®</span>
+  <span class="count"><b id="count">0</b> / 1,000,000</span>
+</footer>
+
+<script>
+  /* ── The one number on this page that must never be wrong.
+        Set it from Stripe, or from dollars you actually have. ── */
+  const DOLLARS_IN = 2311;
+  const GOAL = 1000000;
+
+  /* ── one line per picture. that's the whole CMS. ──────────── */
+  const PICTURES = [
+    '',
+    '',
+    '',
+  ];
+
+  document.getElementById('count').textContent = DOLLARS_IN.toLocaleString('en-US');
+
+  const tally = document.querySelector('.tally b');
+  const tail  = document.getElementById('tail');
+  const fill  = document.getElementById('fill');
+
+  tally.textContent = DOLLARS_IN.toLocaleString('en-US');
+  if (DOLLARS_IN > 0) {
+    tail.textContent = '';
+    requestAnimationFrame(() =>
+      fill.style.width = Math.max(0.4, (DOLLARS_IN / GOAL) * 100) + '%'
+    );
+  }
+
+  const box = document.getElementById('pictures');
+  PICTURES.forEach(src => {
+    const fig = document.createElement('figure');
+
+    if (src) {
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = 'someone holding a dollar bill';
+      img.loading = 'lazy';
+      fig.appendChild(img);
+    } else {
+      const ph = document.createElement('div');
+      ph.className = 'ph';
+      fig.appendChild(ph);
+    }
+
+    box.appendChild(fig);
+  });
+</script>
+</body>
+</html>
