@@ -11,7 +11,6 @@
     /* ▼ Replace with the hex from gooddaywillarrive.com.
          Everything else on the page derives from it. */
     --pink:#FF6FA5;
-    --blue:#6FB5FF;   /* every other letter */
 
     --paper:#FFFFFF;
     --ink:var(--pink);
@@ -65,7 +64,6 @@
   p{max-width:56ch;margin-bottom:1.35rem}
   p:last-child{margin-bottom:0}
   .muted{color:var(--muted)}
-  .b{color:var(--blue)}   /* alternating letter */
 
   h2,.eyebrow{
     font-family:var(--sans); font-size:12px; font-weight:700;
@@ -260,53 +258,6 @@
 
     box.appendChild(fig);
   });
-
-  /* ── every other rendered line, light blue ───────────────── */
-  (function(){
-    const skip = new Set(['SCRIPT','STYLE','SVG','PATH']);
-    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
-      acceptNode(n){
-        if(!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
-        for(let p = n.parentNode; p; p = p.parentNode)
-          if(skip.has(p.nodeName.toUpperCase())) return NodeFilter.FILTER_REJECT;
-        return NodeFilter.FILTER_ACCEPT;
-      }
-    });
-    const nodes = [];
-    for(let n; (n = walker.nextNode()); ) nodes.push(n);
-
-    /* wrap each word so we can measure where it lands */
-    const words = [];
-    nodes.forEach(n => {
-      const frag = document.createDocumentFragment();
-      for(const tok of n.nodeValue.split(/(\s+)/)){
-        if(tok === '') continue;
-        if(/^\s+$/.test(tok)){ frag.appendChild(document.createTextNode(tok)); continue; }
-        const s = document.createElement('span');
-        s.textContent = tok;
-        frag.appendChild(s);
-        words.push(s);
-      }
-      n.parentNode.replaceChild(frag, n);
-    });
-
-    /* group words into visual lines by their top edge, colour alternate lines */
-    function paint(){
-      let line = -1, prevTop = null;
-      for(const w of words){
-        const top = w.getBoundingClientRect().top;
-        if(prevTop === null || Math.abs(top - prevTop) > 4){ line++; prevTop = top; }
-        w.classList.toggle('b', line % 2 === 1);
-      }
-    }
-    paint();
-
-    let raf;
-    addEventListener('resize', () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(paint);
-    });
-  })();
 </script>
 
 <!-- Vercel Web Analytics -->
